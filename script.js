@@ -17,6 +17,10 @@ function activateSection(targetId) {
   if (link) link.classList.add("active");
   section.classList.add("active");
 
+  // When switching sections, show the new content (especially helpful on mobile).
+  const scroller = $(".terminal-content");
+  if (scroller) scroller.scrollTop = 0;
+
   // Keep the URL hash in sync (nice for refresh/share)
   history.replaceState(null, "", `#${targetId}`);
 
@@ -254,6 +258,8 @@ function runCommand(rawInput) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+
   // Nav click support
   $all(".nav-link").forEach((link) => {
     link.addEventListener("click", (e) => {
@@ -261,7 +267,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const target = link.getAttribute("href").slice(1);
       if (activateSection(target)) {
         const cli = $("#cli");
-        if (cli) cli.focus();
+        // On mobile/touch, focusing the input jumps the page and opens the keyboard.
+        if (cli && !isCoarsePointer) cli.focus();
       }
     });
   });
@@ -323,7 +330,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Autofocus like a terminal (but don't fight the boot sequence)
-    if (!bootScheduled) {
+    // Avoid auto-opening the keyboard on touch devices.
+    if (!bootScheduled && !isCoarsePointer) {
       setTimeout(() => cli.focus(), 50);
     }
   }

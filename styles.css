@@ -377,10 +377,12 @@ html.boot-prep .terminal-footer {
   color: var(--term-fg);
   font-weight: 600;
   user-select: none;
+  white-space: nowrap;
 }
 
 .command {
   color: var(--term-fg);
+  overflow-wrap: anywhere;
 }
 
 /* Output */
@@ -741,21 +743,34 @@ html.boot-prep .terminal-footer {
   align-items: center;
   gap: 10px;
   padding: 12px 15px;
-  border: 1px solid var(--text-secondary);
-  border-radius: 3px;
-  color: var(--text-secondary);
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  color: var(--term-fg);
   text-decoration: none;
-  background-color: rgba(0, 212, 255, 0.08);
-  transition: all 0.3s ease;
+  background: radial-gradient(
+      120% 160% at 15% 20%,
+      rgba(192, 97, 203, 0.1),
+      transparent 55%
+    ),
+    rgba(0, 0, 0, 0.16);
+  transition: transform 140ms ease, background-color 140ms ease,
+    border-color 140ms ease, box-shadow 140ms ease, color 140ms ease;
   font-size: 13px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .contact-link:hover {
-  color: var(--text-primary);
-  border-color: var(--text-primary);
-  background-color: rgba(0, 255, 136, 0.1);
-  box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-  text-shadow: 0 0 10px var(--text-primary);
+  transform: translateY(-1px);
+  border-color: rgba(192, 97, 203, 0.38);
+  background: radial-gradient(
+      120% 160% at 15% 20%,
+      rgba(192, 97, 203, 0.18),
+      transparent 55%
+    ),
+    rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22), 0 0 0 3px rgba(192, 97, 203, 0.1);
 }
 
 .contact-link i {
@@ -841,21 +856,45 @@ html.boot-prep .terminal-footer {
   }
 
   .brand {
-    gap: 14px;
+    gap: 12px;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .brand-mark {
-    width: 120px;
-    height: 120px;
+    width: 104px;
+    height: 104px;
+  }
+
+  .brand-logo {
+    object-fit: contain;
+    padding: 10px;
   }
 
   .terminal-nav {
     gap: 8px;
+    row-gap: 10px;
+  }
+
+  .terminal-nav .nav-label {
+    flex-basis: 100%;
+  }
+
+  .terminal-nav .nav-hint {
+    flex-basis: 100%;
   }
 
   .nav-link {
     font-size: 11px;
-    padding: 4px 8px;
+    padding: 8px 10px;
+  }
+
+  .output {
+    margin-left: 0;
+  }
+
+  .terminal-footer {
+    padding: 10px 15px;
   }
 
   .feature-grid {
