@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JimCircuit - Exploring the Internet</title>
+    <link rel="icon" href="assets/jimcircuit-logo.svg" type="image/svg+xml" />
+    <script>
+      // Avoid a flash of prompts before the boot animation runs.
+      document.documentElement.classList.add("boot-prep");
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div
+      class="terminal-container"
+      role="application"
+      aria-label="JimCircuit terminal website"
+    >
+      <!-- Terminal Header -->
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <span class="btn btn-red"></span>
+          <span class="btn btn-yellow"></span>
+          <span class="btn btn-green"></span>
+        </div>
+        <span class="terminal-title">Terminal — jimcircuit@web:~</span>
+      </div>
+
+      <!-- Terminal Content -->
+      <div class="terminal-content">
+        <!-- MOTD / intro (Ubuntu terminal vibe) -->
+        <div class="motd" aria-label="Terminal welcome message">
+          <pre>
+Welcome to JimCircuit OS (GNU/Linux)
+
+ * Education: systems, networking, how data moves
+ * Status: online
+
+Type <span class="ansi ansi-magenta">help</span> to see commands.
+                </pre>
+        </div>
+
+        <!-- Brand banner -->
+        <div class="brand">
+          <div class="brand-mark">
+            <img
+              class="brand-logo"
+              src="assets/jimcircuit-logo.svg"
+              alt="JimCircuit logo"
+              width="160"
+              height="160"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+          <div class="brand-text">
+            <div class="brand-name">JIMCIRCUIT</div>
+            <div class="brand-tagline">
+              Messing around with the internet and how it moves.
+            </div>
+          </div>
+        </div>
+
+        <!-- Command hints (still clickable) -->
+        <nav class="terminal-nav" aria-label="Command shortcuts">
+          <span class="nav-label">Available:</span>
+          <a href="#home" class="nav-link active">home</a>
+          <a href="#about" class="nav-link">about</a>
+          <a href="#videos" class="nav-link">videos</a>
+          <a href="#shop" class="nav-link">shop</a>
+          <span class="nav-label">•</span>
+          <span class="nav-hint"
+            >Try: <span class="ansi ansi-magenta">help</span>,
+            <span class="ansi ansi-magenta">clear</span></span
+          >
+        </nav>
+
+        <!-- Main Content Sections -->
+        <section id="home" class="content-section active" data-boot="home">
+          <div class="command-line boot-step">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <span class="command">whoami</span>
+          </div>
+          <div class="output boot-output">
+            <p>JimCircuit</p>
+          </div>
+
+          <div class="command-line boot-step">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <span class="command">cat ~/profiel.txt</span>
+          </div>
+          <div class="output boot-output stderr">
+            <p class="stderr">
+              cat: /home/jimcircuit/profiel.txt: No such file or directory
+            </p>
+          </div>
+
+          <div class="command-line boot-step">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <span class="command">cat ~/profile.txt</span>
+          </div>
+          <div class="output boot-output">
+            <p><span class="ansi ansi-cyan">Category</span>: Education</p>
+            <p>
+              <span class="ansi ansi-cyan">Bio</span>: Messing around with the
+              internet and how it moves.
+            </p>
+            <p>
+              <span class="ansi ansi-cyan">Focus</span>: networking • systems •
+              I/O • protocols
+            </p>
+          </div>
+        </section>
+
+        <section id="about" class="content-section">
+          <div class="command-line">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <span class="command">cat ~/about.md</span>
+          </div>
+          <div class="output">
+            <p>
+              JimCircuit is an education-focused space for learning how the
+              internet actually works: packets, protocols, operating systems,
+              and the plumbing that makes everything move.
+            </p>
+            <p>
+              Expect bite-size breakdowns, experiments, and “why does this
+              behave like that?” deep dives—written like terminal notes you can
+              actually reuse.
+            </p>
+          </div>
+        </section>
+
+        <section id="videos" class="content-section">
+          <div class="command-line">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~/videos</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <span class="command">ls | head</span>
+          </div>
+          <div class="output">
+            <div class="video-header">
+              <p>
+                <span class="ansi ansi-cyan">Sources</span>:
+                <span class="ansi ansi-magenta">Instagram</span> •
+                <span class="ansi ansi-magenta">YouTube</span> •
+                <span class="ansi ansi-magenta">TikTok</span>
+              </p>
+            </div>
+
+            <div class="video-links" aria-label="Video platform links">
+              <a
+                class="contact-link"
+                href="https://www.instagram.com/jimcircuit/"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <i class="fab fa-instagram"></i> Instagram
+              </a>
+              <a
+                class="contact-link"
+                href="https://www.youtube.com/@jimcircuit"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <i class="fab fa-youtube"></i> YouTube
+              </a>
+              <a
+                class="contact-link"
+                href="https://www.tiktok.com/@jimcircuit"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <i class="fab fa-tiktok"></i> TikTok
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section id="shop" class="content-section">
+          <div class="command-line">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~/shop</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <span class="command">cat ~/shop.txt</span>
+          </div>
+          <div class="output">
+            <p>
+              <span class="ansi ansi-cyan">Status</span>: coming soon
+              <span class="ansi ansi-fg">(merch + digital drops)</span>
+            </p>
+            <p>
+              <span class="ansi ansi-cyan">Note</span>: set your shop URL in
+              this section when it’s ready.
+            </p>
+          </div>
+
+          <div class="video-links" aria-label="Shop links">
+            <a class="contact-link" href="#" aria-disabled="true">
+              <i class="fa-solid fa-bag-shopping"></i> Shop (soon)
+            </a>
+          </div>
+        </section>
+
+        <!-- Runtime log for typed commands (kept near the input like a real terminal) -->
+        <div id="runtime-log" class="runtime-log" aria-live="polite"></div>
+
+        <!-- Interactive terminal input -->
+        <div class="terminal-footer" aria-label="Terminal command input">
+          <div class="input-line">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <input
+              id="cli"
+              class="cli"
+              type="text"
+              spellcheck="false"
+              autocomplete="off"
+              autocapitalize="off"
+              aria-label="Type a command and press Enter"
+              placeholder="type: help"
+            />
+            <span class="cursor" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script async src="https://www.instagram.com/embed.js"></script>
+    <script async src="https://www.tiktok.com/embed.js"></script>
+  </body>
+</html>
