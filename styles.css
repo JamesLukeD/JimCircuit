@@ -35,9 +35,15 @@
   --radius: 10px;
 }
 
+html {
+  background-color: var(--page-bg-2);
+  height: 100%;
+}
+
 body {
   font-family: "Courier New", Courier, monospace;
-  background: radial-gradient(
+  background-color: var(--page-bg-2);
+  background-image: radial-gradient(
       900px 620px at 42% 12%,
       var(--accent-magenta-glow),
       transparent 62%
@@ -48,6 +54,7 @@ body {
       transparent 70%
     ),
     linear-gradient(180deg, var(--page-bg) 0%, var(--page-bg-2) 100%);
+  min-height: 100%;
   color: var(--term-fg);
   line-height: 1.6;
   overflow-x: hidden;
@@ -63,7 +70,12 @@ body {
   min-height: 100vh;
   max-width: 1000px;
   margin: 20px auto;
-  background: linear-gradient(180deg, var(--term-bg) 0%, var(--term-bg-2) 100%);
+  background-color: var(--term-bg-2);
+  background-image: linear-gradient(
+    180deg,
+    var(--term-bg) 0%,
+    var(--term-bg-2) 100%
+  );
   border: 1px solid var(--term-border-strong);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -130,10 +142,12 @@ body {
 .terminal-content {
   flex: 1;
   padding: 25px;
-  background-color: transparent;
+  background-color: var(--term-bg-2);
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Subtle scanlines/noise */
