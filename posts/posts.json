@@ -1,0 +1,12 @@
+{
+  "posts": [
+    {
+      "slug": "unauthorised-access",
+      "title": "Understanding UIDs and Root Access",
+      "date": "2026-01-18",
+      "summary": "Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system.",
+      "markdown": "posts/2026-01-18-unauthorised-Access.md",
+      "videoUrl": "https://www.youtube.com/shorts/SmrlJrirxYg"
+    }
+  ]
+}

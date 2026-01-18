@@ -6,6 +6,202 @@ function $all(selector) {
   return Array.from(document.querySelectorAll(selector));
 }
 
+function escapeHtml(text) {
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function setSectionUrl(targetId) {
+  const url = new URL(window.location.href);
+  url.hash = `#${targetId}`;
+
+  // Only keep the post query param while in the blog.
+  if (targetId !== "blog") {
+    url.searchParams.delete("post");
+  }
+
+  history.replaceState(null, "", url.pathname + url.search + url.hash);
+}
+
+function setBlogPostUrl(slug) {
+  const url = new URL(window.location.href);
+  url.hash = "#blog";
+  if (slug) url.searchParams.set("post", slug);
+  else url.searchParams.delete("post");
+  history.replaceState(null, "", url.pathname + url.search + url.hash);
+}
+
+let blogInitialized = false;
+let blogIndexPromise = null;
+let blogIndex = [];
+
+async function loadBlogIndex() {
+  if (blogIndexPromise) return blogIndexPromise;
+
+  blogIndexPromise = (async () => {
+    const res = await fetch("posts/posts.json", { cache: "no-store" });
+    if (!res.ok) throw new Error(`Failed to load posts index (${res.status})`);
+    const data = await res.json();
+    const posts = Array.isArray(data) ? data : data.posts;
+    if (!Array.isArray(posts)) throw new Error("posts.json must be an array");
+
+    // Normalize + sort newest-first (YYYY-MM-DD sorts lexicographically).
+    blogIndex = posts
+      .filter((p) => p && typeof p.slug === "string")
+      .map((p) => ({
+        slug: String(p.slug),
+        title: String(p.title || p.slug),
+        date: String(p.date || ""),
+        summary: String(p.summary || ""),
+        markdown: String(p.markdown || ""),
+        videoUrl: p.videoUrl ? String(p.videoUrl) : "",
+      }))
+      .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+
+    return blogIndex;
+  })();
+
+  return blogIndexPromise;
+}
+
+function renderBlogList(posts) {
+  const list = document.getElementById("blog-list");
+  if (!list) return;
+
+  if (!posts || posts.length === 0) {
+    list.innerHTML = '<p class="blog-empty">No posts yet.</p>';
+    return;
+  }
+
+  list.innerHTML = posts
+    .map((p) => {
+      const meta = [p.date].filter(Boolean).join(" • ");
+      return `
+        <button class="blog-item" type="button" data-slug="${escapeHtml(
+          p.slug
+        )}" aria-label="Open post ${escapeHtml(p.title)}">
+          <div class="blog-item-title">${escapeHtml(p.title)}</div>
+          ${meta ? `<div class="blog-item-meta">${escapeHtml(meta)}</div>` : ""}
+          ${
+            p.summary
+              ? `<div class="blog-item-summary">${escapeHtml(p.summary)}</div>`
+              : ""
+          }
+        </button>
+      `;
+    })
+    .join("");
+}
+
+async function showBlogPost(slug) {
+  const postEl = document.getElementById("blog-post");
+  if (!postEl) return;
+
+  const posts = await loadBlogIndex();
+  const post = posts.find((p) => p.slug === slug);
+
+  if (!post) {
+    postEl.innerHTML = `<p class="blog-empty">Post not found: <span class="ansi ansi-magenta">${escapeHtml(
+      slug
+    )}</span></p>`;
+    setBlogPostUrl("");
+    return;
+  }
+
+  if (!post.markdown) {
+    postEl.innerHTML = `<p class="blog-empty">This post has no markdown file set.</p>`;
+    setBlogPostUrl(post.slug);
+    return;
+  }
+
+  postEl.innerHTML = '<p class="blog-loading">Loading article…</p>';
+
+  const res = await fetch(post.markdown, { cache: "no-store" });
+  if (!res.ok) {
+    postEl.innerHTML = `<p class="blog-empty">Failed to load <span class="ansi ansi-magenta">${escapeHtml(
+      post.markdown
+    )}</span> (${res.status})</p>`;
+    setBlogPostUrl(post.slug);
+    return;
+  }
+  const md = await res.text();
+
+  let html = "";
+  if (window.marked && typeof window.marked.parse === "function") {
+    try {
+      html = window.marked.parse(md);
+    } catch {
+      html = `<pre>${escapeHtml(md)}</pre>`;
+    }
+  } else {
+    html = `<pre>${escapeHtml(md)}</pre>`;
+  }
+
+  if (window.DOMPurify && typeof window.DOMPurify.sanitize === "function") {
+    html = window.DOMPurify.sanitize(html);
+  }
+
+  const headerBits = [
+    `<h2 class="blog-post-title">${escapeHtml(post.title)}</h2>`,
+    post.date
+      ? `<div class="blog-post-meta">${escapeHtml(post.date)}</div>`
+      : "",
+    post.videoUrl
+      ? `<div class="blog-post-links"><a class="contact-link" href="${escapeHtml(
+          post.videoUrl
+        )}" target="_blank" rel="noreferrer noopener">\u25B6 Watch video</a></div>`
+      : "",
+  ].join("");
+
+  postEl.innerHTML = `
+    <header class="blog-post-header">${headerBits}</header>
+    <div class="blog-post-body">${html}</div>
+  `;
+
+  setBlogPostUrl(post.slug);
+}
+
+async function ensureBlogInitialized() {
+  if (blogInitialized) return;
+  blogInitialized = true;
+
+  // Configure marked a bit (if present).
+  if (window.marked && typeof window.marked.setOptions === "function") {
+    window.marked.setOptions({ gfm: true, breaks: true });
+  }
+
+  const list = document.getElementById("blog-list");
+  if (list) {
+    list.addEventListener("click", (e) => {
+      const btn = e.target.closest(".blog-item");
+      if (!btn) return;
+      const slug = btn.getAttribute("data-slug");
+      if (slug) showBlogPost(slug);
+    });
+  }
+
+  try {
+    const posts = await loadBlogIndex();
+    renderBlogList(posts);
+
+    const initialSlug = new URLSearchParams(location.search).get("post");
+    if (initialSlug) {
+      showBlogPost(initialSlug);
+    }
+  } catch (err) {
+    const listEl = document.getElementById("blog-list");
+    if (listEl) {
+      listEl.innerHTML = `<p class="blog-empty">Failed to load posts index.</p>`;
+    }
+    // Keep details out of the UI; still log for debugging.
+    console.error(err);
+  }
+}
+
 function activateSection(targetId) {
   const section = document.getElementById(targetId);
   if (!section) return false;
@@ -21,8 +217,12 @@ function activateSection(targetId) {
   const scroller = $(".terminal-content");
   if (scroller) scroller.scrollTop = 0;
 
-  // Keep the URL hash in sync (nice for refresh/share)
-  history.replaceState(null, "", `#${targetId}`);
+  // Keep the URL in sync (nice for refresh/share)
+  setSectionUrl(targetId);
+
+  if (targetId === "blog") {
+    ensureBlogInitialized();
+  }
 
   if (targetId === "videos") {
     processInstagramEmbeds();
@@ -218,12 +418,14 @@ function runCommand(rawInput) {
     h: "home",
     a: "about",
     v: "videos",
+    b: "blog",
     s: "shop",
     reels: "videos",
+    notes: "blog",
   };
 
   const route = routeAliases[command] || command;
-  if (["home", "about", "videos", "shop"].includes(route)) {
+  if (["home", "about", "videos", "blog", "shop"].includes(route)) {
     appendRuntimeEntry(input);
     activateSection(route);
     return;
@@ -232,9 +434,10 @@ function runCommand(rawInput) {
   if (command === "help") {
     appendRuntimeEntry(input, [
       "Commands:",
-      "  home | about | videos | shop",
+      "  home | about | videos | blog | shop",
       "  clear  (clears the session output)",
       "  reels  (alias for videos)",
+      "  notes  (alias for blog)",
       "  s      (alias for shop)",
       "Tip: click the pills above or type commands here.",
     ]);

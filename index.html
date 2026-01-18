@@ -88,6 +88,7 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
           <a href="#home" class="nav-link active">home</a>
           <a href="#about" class="nav-link">about</a>
           <a href="#videos" class="nav-link">videos</a>
+          <a href="#blog" class="nav-link">blog</a>
           <a href="#shop" class="nav-link">shop</a>
           <span class="nav-label">•</span>
           <span class="nav-hint"
@@ -231,6 +232,36 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
           </div>
         </section>
 
+        <section id="blog" class="content-section">
+          <div class="command-line">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~/blog</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <span class="command">ls -lt ~/blog | head</span>
+          </div>
+          <div class="output">
+            <p>
+              <span class="ansi ansi-cyan">Notes</span>: short write-ups that go
+              with my videos.
+            </p>
+          </div>
+
+          <div class="blog-wrap" aria-label="Blog posts">
+            <div class="blog-list" id="blog-list" aria-label="Blog post list">
+              <p class="blog-loading">Loading posts…</p>
+            </div>
+
+            <article class="blog-post" id="blog-post" aria-label="Blog post">
+              <p class="blog-empty">Select a post from the list to read.</p>
+            </article>
+          </div>
+        </section>
+
         <section id="shop" class="content-section">
           <div class="command-line">
             <span class="promptline" aria-hidden="true">
@@ -287,6 +318,8 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
     <script src="script.js"></script>
     <script async src="https://www.instagram.com/embed.js"></script>
     <script async src="https://www.tiktok.com/embed.js"></script>

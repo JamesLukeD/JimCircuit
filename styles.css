@@ -207,6 +207,138 @@ body {
   color: var(--ansi-red);
 }
 
+/* Blog */
+.blog-wrap {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 860px) {
+  .blog-wrap {
+    grid-template-columns: 320px 1fr;
+    align-items: start;
+  }
+}
+
+.blog-list,
+.blog-post {
+  position: relative;
+  background: var(--panel-bg);
+  border: 1px solid var(--term-border-strong);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+}
+
+.blog-loading,
+.blog-empty {
+  color: var(--term-fg-dim);
+}
+
+.blog-item {
+  width: 100%;
+  display: block;
+  text-align: left;
+  padding: 12px 12px;
+  margin: 0 0 10px 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 17, 21, 0.6);
+  color: var(--term-fg);
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease,
+    background-color 120ms ease;
+}
+
+.blog-item:last-child {
+  margin-bottom: 0;
+}
+
+.blog-item:hover {
+  border-color: var(--panel-magenta-border);
+  background: rgba(192, 97, 203, 0.12);
+  transform: translateY(-1px);
+}
+
+.blog-item-title {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.blog-item-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(230, 230, 230, 0.65);
+}
+
+.blog-item-summary {
+  margin-top: 8px;
+  color: var(--term-fg-dim);
+  font-size: 13px;
+}
+
+.blog-post-header {
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.blog-post-title {
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.blog-post-meta {
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(230, 230, 230, 0.65);
+}
+
+.blog-post-body {
+  color: var(--term-fg);
+}
+
+.blog-post-body h1,
+.blog-post-body h2,
+.blog-post-body h3 {
+  margin: 14px 0 10px;
+  line-height: 1.25;
+}
+
+.blog-post-body p {
+  margin: 10px 0;
+}
+
+.blog-post-body a {
+  color: var(--ansi-blue);
+  text-decoration: none;
+}
+
+.blog-post-body a:hover {
+  text-decoration: underline;
+}
+
+.blog-post-body code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0 4px;
+  border-radius: 6px;
+}
+
+.blog-post-body pre {
+  overflow: auto;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.blog-post-body pre code {
+  background: transparent;
+  padding: 0;
+}
+
 /* Boot typing animation */
 .boot-hidden {
   display: none;
