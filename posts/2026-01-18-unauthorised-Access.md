@@ -4,8 +4,6 @@
 
 - https://www.youtube.com/shorts/SmrlJrirxYg
 
-
-
 Have you ever tried to open a file in Linux and saw the "Permission Denied" message? It’s because Linux uses your user identity to secure important parts of the system. Understanding how Linux manages these permissions helps you understand why you see this message.
 
 ## The Power of the "Root" User
@@ -39,9 +37,6 @@ Everyone else: No privileges.
 
 For regular users (UID 1000, not in root or shadow), you will not be able to access the file. This keeps your system secure.
 
-
-
 ## Conclusion
 
 So, the next time you see "Permission Denied," just remember that Linux is protecting your crucial system data. It’s designed this way to keep your system safe from unwanted changes. If you must gain access, use sudo or switch to the root user carefully. As Slughorn says in Harry Potter, “Use it well.”
-

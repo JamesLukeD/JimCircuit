@@ -39,6 +39,22 @@ let blogInitialized = false;
 let blogIndexPromise = null;
 let blogIndex = [];
 
+function setBlogReadingMode(isReading) {
+  const blogSection = document.getElementById("blog");
+  if (!blogSection) return;
+  blogSection.classList.toggle("blog-reading", Boolean(isReading));
+}
+
+function clearBlogPost() {
+  const postEl = document.getElementById("blog-post");
+  if (postEl) {
+    postEl.innerHTML =
+      '<p class="blog-empty">Select a post from the list to read.</p>';
+  }
+  setBlogReadingMode(false);
+  setBlogPostUrl("");
+}
+
 async function loadBlogIndex() {
   if (blogIndexPromise) return blogIndexPromise;
 
@@ -108,15 +124,19 @@ async function showBlogPost(slug) {
     postEl.innerHTML = `<p class="blog-empty">Post not found: <span class="ansi ansi-magenta">${escapeHtml(
       slug
     )}</span></p>`;
+    setBlogReadingMode(false);
     setBlogPostUrl("");
     return;
   }
 
   if (!post.markdown) {
     postEl.innerHTML = `<p class="blog-empty">This post has no markdown file set.</p>`;
+    setBlogReadingMode(true);
     setBlogPostUrl(post.slug);
     return;
   }
+
+  setBlogReadingMode(true);
 
   postEl.innerHTML = '<p class="blog-loading">Loading article…</p>';
 
@@ -146,6 +166,7 @@ async function showBlogPost(slug) {
   }
 
   const headerBits = [
+    `<button type="button" class="blog-back" aria-label="Back to posts list">\u2190 Back</button>`,
     `<h2 class="blog-post-title">${escapeHtml(post.title)}</h2>`,
     post.date
       ? `<div class="blog-post-meta">${escapeHtml(post.date)}</div>`
@@ -184,6 +205,16 @@ async function ensureBlogInitialized() {
     });
   }
 
+  const postEl = document.getElementById("blog-post");
+  if (postEl) {
+    postEl.addEventListener("click", (e) => {
+      const back = e.target.closest(".blog-back");
+      if (back) {
+        clearBlogPost();
+      }
+    });
+  }
+
   try {
     const posts = await loadBlogIndex();
     renderBlogList(posts);
@@ -191,6 +222,8 @@ async function ensureBlogInitialized() {
     const initialSlug = new URLSearchParams(location.search).get("post");
     if (initialSlug) {
       showBlogPost(initialSlug);
+    } else {
+      setBlogReadingMode(false);
     }
   } catch (err) {
     const listEl = document.getElementById("blog-list");
@@ -222,6 +255,14 @@ function activateSection(targetId) {
 
   if (targetId === "blog") {
     ensureBlogInitialized();
+
+    // Keep the blog UI aligned with the URL.
+    const slug = new URLSearchParams(location.search).get("post");
+    if (slug) {
+      showBlogPost(slug);
+    } else {
+      setBlogReadingMode(false);
+    }
   }
 
   if (targetId === "videos") {

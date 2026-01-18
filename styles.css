@@ -339,6 +339,51 @@ body {
   padding: 0;
 }
 
+.blog-back {
+  display: none;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(230, 230, 230, 0.9);
+  cursor: pointer;
+  width: fit-content;
+}
+
+.blog-back:hover {
+  border-color: var(--panel-magenta-border);
+  background: rgba(192, 97, 203, 0.12);
+}
+
+/* Mobile reader mode: list-only until a post is selected */
+@media (max-width: 720px) {
+  .blog-wrap {
+    gap: 12px;
+  }
+
+  .blog-list,
+  .blog-post {
+    padding: 12px;
+  }
+
+  .blog-item {
+    padding: 10px;
+  }
+
+  #blog:not(.blog-reading) .blog-post {
+    display: none;
+  }
+
+  #blog.blog-reading .blog-list {
+    display: none;
+  }
+
+  #blog.blog-reading .blog-back {
+    display: inline-block;
+  }
+}
+
 /* Boot typing animation */
 .boot-hidden {
   display: none;
