@@ -5,50 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Understanding UIDs and Root Access | JimCircuit</title>
-    <meta name="description" content="Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system." />
-    <link rel="canonical" href="https://jimcircuit.net/blog/unauthorised-access/" />
+    <meta
+      name="description"
+      content="Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system."
+    />
+    <link
+      rel="canonical"
+      href="https://jimcircuit.net/blog/unauthorised-access/"
+    />
 
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Understanding UIDs and Root Access | JimCircuit" />
-    <meta property="og:description" content="Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system." />
-    <meta property="og:url" content="https://jimcircuit.net/blog/unauthorised-access/" />
+    <meta
+      property="og:title"
+      content="Understanding UIDs and Root Access | JimCircuit"
+    />
+    <meta
+      property="og:description"
+      content="Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system."
+    />
+    <meta
+      property="og:url"
+      content="https://jimcircuit.net/blog/unauthorised-access/"
+    />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Understanding UIDs and Root Access | JimCircuit" />
-    <meta name="twitter:description" content="Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system." />
+    <meta
+      name="twitter:title"
+      content="Understanding UIDs and Root Access | JimCircuit"
+    />
+    <meta
+      name="twitter:description"
+      content="Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system."
+    />
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-41QBQ7R0DY"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-41QBQ7R0DY"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag("js", new Date());
       gtag("config", "G-41QBQ7R0DY");
     </script>
 
-    <link rel="icon" href="../../assets/jimcircuit-logo.svg" type="image/svg+xml" />
+    <link
+      rel="icon"
+      href="../../assets/jimcircuit-logo.svg"
+      type="image/svg+xml"
+    />
     <link rel="stylesheet" href="../../styles.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
     <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Understanding UIDs and Root Access",
-  "datePublished": "2026-01-18",
-  "description": "Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system.",
-  "url": "https://jimcircuit.net/blog/unauthorised-access/",
-  "author": {
-    "@type": "Person",
-    "name": "JimCircuit"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "JimCircuit",
-    "url": "https://jimcircuit.net"
-  },
-  "keywords": "linux permissions, uid 0 root, permission denied, file ownership, how linux permissions work"
-}
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Understanding UIDs and Root Access",
+        "datePublished": "2026-01-18",
+        "description": "Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system.",
+        "url": "https://jimcircuit.net/blog/unauthorised-access/",
+        "author": {
+          "@type": "Person",
+          "name": "JimCircuit"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "JimCircuit",
+          "url": "https://jimcircuit.net"
+        },
+        "keywords": "linux permissions, uid 0 root, permission denied, file ownership, how linux permissions work"
+      }
     </script>
 
     <style>
@@ -94,10 +127,12 @@
         font-size: 13px;
         padding: 8px 12px;
         border-radius: 8px;
-        transition: background 150ms ease, color 150ms ease;
+        transition:
+          background 150ms ease,
+          color 150ms ease;
       }
       .blog-page-nav a:hover {
-        background: rgba(255,255,255,0.06);
+        background: rgba(255, 255, 255, 0.06);
         color: var(--term-fg);
       }
       .blog-page-content {
@@ -119,34 +154,44 @@
       }
       .blog-page-body {
         line-height: 1.7;
+        font-size: 16px;
       }
       .blog-page-body h2 {
         margin: 28px 0 14px 0;
-        font-size: 20px;
+        font-size: 22px;
         color: var(--ansi-cyan);
       }
       .blog-page-body h3 {
         margin: 20px 0 10px 0;
-        font-size: 16px;
+        font-size: 18px;
       }
       .blog-page-body p {
         margin: 0 0 16px 0;
+        font-size: 16px;
       }
       .blog-page-body pre {
-        background: rgba(0,0,0,0.3);
+        background: rgba(0, 0, 0, 0.3);
         border: 1px solid var(--term-border);
         border-radius: 8px;
         padding: 16px;
         overflow-x: auto;
         margin: 16px 0;
+        font-size: 14px;
       }
       .blog-page-body code {
         font-family: "Courier New", monospace;
-        font-size: 13px;
+        font-size: inherit;
+      }
+      .blog-page-body p code {
+        background: rgba(0, 0, 0, 0.25);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 14px;
       }
       .blog-page-body ul {
         margin: 16px 0;
         padding-left: 24px;
+        font-size: 16px;
       }
       .blog-page-body li {
         margin: 8px 0;
@@ -169,10 +214,18 @@
         background: rgba(192, 97, 203, 0.25);
       }
       @media (max-width: 600px) {
-        .blog-page { padding: 12px; }
-        .blog-page-content { padding: 20px; }
-        .blog-page-title { font-size: 22px; }
-        .blog-page-nav { display: none; }
+        .blog-page {
+          padding: 12px;
+        }
+        .blog-page-content {
+          padding: 20px;
+        }
+        .blog-page-title {
+          font-size: 22px;
+        }
+        .blog-page-nav {
+          display: none;
+        }
       }
     </style>
   </head>
@@ -194,46 +247,89 @@
       <article class="blog-page-content">
         <h1 class="blog-page-title">Understanding UIDs and Root Access</h1>
         <div class="blog-page-meta">📅 2026-01-18</div>
-        
-        
-    <div class="yt-inline" aria-label="Embedded YouTube video">
-      <div class="yt-embed">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/SmrlJrirxYg?rel=0"
-          title="YouTube video"
-          loading="lazy"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-        ></iframe>
-      </div>
-    </div>
-  
+
+        <div class="yt-inline" aria-label="Embedded YouTube video">
+          <div class="yt-embed">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/SmrlJrirxYg?rel=0"
+              title="YouTube video"
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allow="
+                accelerometer;
+                autoplay;
+                clipboard-write;
+                encrypted-media;
+                gyroscope;
+                picture-in-picture;
+                web-share;
+              "
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
 
         <div class="blog-page-body">
-          <p>Have you ever tried to open a file in Linux and saw the "Permission Denied" message? It’s because Linux uses your user identity to secure important parts of the system. Understanding how Linux manages these permissions helps you understand why you see this message.</p>
-<h2>The Power of the "Root" User</h2>
-<p>In Ubuntu and similar systems, every user gets a specific access level.</p>
-<p>When you make a new account, Linux gives you a unique User ID (UID) that usually starts at 1000. This UID helps Linux decide what files and commands you can use. Regular users have limited access to keep the system safe.</p>
-<p>The root user, UID 0, can change any file.</p>
-<h2>The ID Command, Who Are You?</h2>
-<p>To find out why you're blocked, see how the system identifies you by using the id command:</p>
-<p>UID: User Identifier<br>GID: Group Identifier</p>
-<p>Linux stores this info in /etc/passwd (users) and /etc/group (groups). Find your entry with: grep 'yourusername' /etc/passwd</p>
-<h2>Case Study: The /etc/shadow File</h2>
-<p>/etc/shadow is one example of a file with restricted access. Its used to store encrypted passwords, so a regular user cannot see or change them</p>
-<p>Run ls -l /etc/shadow to check permissions. You’ll usually see: -rw-r----- 1 root shadow.</p>
-<p>Here’s what those permissions mean:</p>
-<p>Owner (Root): Has Read and Write access.<br>Group (Shadow): Read access.<br>Everyone else: No privileges.</p>
-<p>For regular users (UID 1000, not in root or shadow), you will not be able to access the file. This keeps your system secure.</p>
-<h2>Conclusion</h2>
-<p>So, the next time you see "Permission Denied," just remember that Linux is protecting your crucial system data. It’s designed this way to keep your system safe from unwanted changes. If you must gain access, use sudo or switch to the root user carefully. As Slughorn says in Harry Potter, “Use it well.”</p>
+          <p>
+            Have you ever tried to open a file in Linux and saw the "Permission
+            Denied" message? It’s because Linux uses your user identity to
+            secure important parts of the system. Understanding how Linux
+            manages these permissions helps you understand why you see this
+            message.
+          </p>
+          <h2>The Power of the "Root" User</h2>
+          <p>
+            In Ubuntu and similar systems, every user gets a specific access
+            level.
+          </p>
+          <p>
+            When you make a new account, Linux gives you a unique User ID (UID)
+            that usually starts at 1000. This UID helps Linux decide what files
+            and commands you can use. Regular users have limited access to keep
+            the system safe.
+          </p>
+          <p>The root user, UID 0, can change any file.</p>
+          <h2>The ID Command, Who Are You?</h2>
+          <p>
+            To find out why you're blocked, see how the system identifies you by
+            using the id command:
+          </p>
+          <p>UID: User Identifier<br />GID: Group Identifier</p>
+          <p>
+            Linux stores this info in /etc/passwd (users) and /etc/group
+            (groups). Find your entry with: grep 'yourusername' /etc/passwd
+          </p>
+          <h2>Case Study: The /etc/shadow File</h2>
+          <p>
+            /etc/shadow is one example of a file with restricted access. Its
+            used to store encrypted passwords, so a regular user cannot see or
+            change them
+          </p>
+          <p>
+            Run ls -l /etc/shadow to check permissions. You’ll usually see:
+            -rw-r----- 1 root shadow.
+          </p>
+          <p>Here’s what those permissions mean:</p>
+          <p>
+            Owner (Root): Has Read and Write access.<br />Group (Shadow): Read
+            access.<br />Everyone else: No privileges.
+          </p>
+          <p>
+            For regular users (UID 1000, not in root or shadow), you will not be
+            able to access the file. This keeps your system secure.
+          </p>
+          <h2>Conclusion</h2>
+          <p>
+            So, the next time you see "Permission Denied," just remember that
+            Linux is protecting your crucial system data. It’s designed this way
+            to keep your system safe from unwanted changes. If you must gain
+            access, use sudo or switch to the root user carefully. As Slughorn
+            says in Harry Potter, “Use it well.”
+          </p>
         </div>
 
         <a class="blog-page-back" href="../../#blog">← Back to all posts</a>
       </article>
     </div>
-
-    
   </body>
 </html>

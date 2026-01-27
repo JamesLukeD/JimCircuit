@@ -250,18 +250,20 @@ ${JSON.stringify(schemaData, null, 2)}
       }
       .blog-page-body {
         line-height: 1.7;
+        font-size: 16px;
       }
       .blog-page-body h2 {
         margin: 28px 0 14px 0;
-        font-size: 20px;
+        font-size: 22px;
         color: var(--ansi-cyan);
       }
       .blog-page-body h3 {
         margin: 20px 0 10px 0;
-        font-size: 16px;
+        font-size: 18px;
       }
       .blog-page-body p {
         margin: 0 0 16px 0;
+        font-size: 16px;
       }
       .blog-page-body pre {
         background: rgba(0,0,0,0.3);
@@ -270,14 +272,22 @@ ${JSON.stringify(schemaData, null, 2)}
         padding: 16px;
         overflow-x: auto;
         margin: 16px 0;
+        font-size: 14px;
       }
       .blog-page-body code {
         font-family: "Courier New", monospace;
-        font-size: 13px;
+        font-size: inherit;
+      }
+      .blog-page-body p code {
+        background: rgba(0,0,0,0.25);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 14px;
       }
       .blog-page-body ul {
         margin: 16px 0;
         padding-left: 24px;
+        font-size: 16px;
       }
       .blog-page-body li {
         margin: 8px 0;
