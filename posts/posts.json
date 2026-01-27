@@ -6,7 +6,15 @@
       "date": "2026-01-18",
       "summary": "Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system.",
       "markdown": "posts/2026-01-18-unauthorised-Access.md",
-      "videoUrl": "https://www.youtube.com/shorts/SmrlJrirxYg"
+      "videoUrl": "https://www.youtube.com/shorts/SmrlJrirxYg",
+      "tags": ["Systems", "Linux", "Permissions", "Security", "Protocols"],
+      "keywords": [
+        "linux permissions",
+        "uid 0 root",
+        "permission denied",
+        "file ownership",
+        "how linux permissions work"
+      ]
     }
   ]
 }

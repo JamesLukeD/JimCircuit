@@ -1,8 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Learn how the internet works: networking, systems, and protocols — with short lessons and notes from JimCircuit."
+    />
+    <link rel="canonical" href="https://jimcircuit.net/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="JimCircuit - Exploring the Internet" />
+    <meta
+      property="og:description"
+      content="Learn how the internet works: networking, systems, and protocols — with short lessons and notes from JimCircuit."
+    />
+    <meta property="og:url" content="https://jimcircuit.net/" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JimCircuit - Exploring the Internet" />
+    <meta
+      name="twitter:description"
+      content="Learn how the internet works: networking, systems, and protocols — with short lessons and notes from JimCircuit."
+    />
 
     <!-- Google tag (gtag.js) -->
     <script
@@ -30,8 +51,57 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+
+    <script type="application/ld+json" id="schema-website">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "JimCircuit",
+        "url": "https://jimcircuit.net/",
+        "description": "Learn how the internet works: networking, systems, and protocols — with short lessons and notes from JimCircuit."
+      }
+    </script>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" aria-label="Primary navigation">
+      <div class="site-header-inner">
+        <a class="site-brand" href="#home" aria-label="JimCircuit home">
+          <img
+            class="site-brand-logo"
+            src="assets/jimcircuit-logo.svg"
+            alt="JimCircuit"
+            width="28"
+            height="28"
+            decoding="async"
+          />
+          <span class="site-brand-name">JimCircuit</span>
+        </a>
+
+        <nav class="site-nav" aria-label="Main">
+          <a class="site-nav-link" href="#home">Home</a>
+          <a class="site-nav-link" href="#networking">Networking</a>
+          <a class="site-nav-link" href="#systems">Systems</a>
+          <a class="site-nav-link" href="#protocols">Protocols</a>
+          <a class="site-nav-link" href="#videos">Videos</a>
+          <a class="site-nav-link" href="#blog">Blog</a>
+          <a class="site-nav-link" href="#about">About</a>
+        </nav>
+
+        <div class="site-ctas" aria-label="Primary call to actions">
+          <a
+            class="cta cta-primary"
+            href="https://www.youtube.com/@jimcircuit"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Subscribe
+          </a>
+        </div>
+      </div>
+    </header>
+
     <div
       class="terminal-container"
       role="application"
@@ -48,7 +118,7 @@
       </div>
 
       <!-- Terminal Content -->
-      <div class="terminal-content">
+      <div class="terminal-content" id="main" role="main">
         <!-- MOTD / intro (Ubuntu terminal vibe) -->
         <div class="motd" aria-label="Terminal welcome message">
           <pre>
@@ -82,20 +152,13 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
           </div>
         </div>
 
-        <!-- Command hints (still clickable) -->
-        <nav class="terminal-nav" aria-label="Command shortcuts">
-          <span class="nav-label">Available:</span>
-          <a href="#home" class="nav-link active">home</a>
-          <a href="#about" class="nav-link">about</a>
-          <a href="#videos" class="nav-link">videos</a>
-          <a href="#blog" class="nav-link">blog</a>
-          <a href="#shop" class="nav-link">shop</a>
-          <span class="nav-label">•</span>
+        <!-- Command hints -->
+        <div class="terminal-hint" aria-label="Command hints">
           <span class="nav-hint"
             >Try: <span class="ansi ansi-magenta">help</span>,
             <span class="ansi ansi-magenta">clear</span></span
           >
-        </nav>
+        </div>
 
         <!-- Main Content Sections -->
         <section id="home" class="content-section active" data-boot="home">
@@ -152,6 +215,104 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
               <span class="ansi ansi-cyan">Focus</span>: networking • systems •
               I/O • protocols
             </p>
+
+            <div class="cta-row" aria-label="Recommended actions">
+              <button
+                class="cta cta-primary"
+                type="button"
+                id="cta-latest-inline"
+              >
+                Watch Latest Lesson
+              </button>
+              <a
+                class="cta cta-secondary"
+                href="#blog"
+                aria-label="Browse notes and lessons"
+              >
+                Browse Notes
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section id="networking" class="content-section">
+          <div class="command-line">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~/networking</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <span class="command">ls -lt | head</span>
+          </div>
+          <div class="output">
+            <p>
+              <span class="ansi ansi-cyan">Networking</span>: how packets move,
+              routing, DNS, TCP/UDP, and troubleshooting.
+            </p>
+            <div
+              class="category-posts"
+              data-tag="Networking"
+              aria-label="Networking posts"
+            >
+              <p class="blog-loading">Loading posts…</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="systems" class="content-section">
+          <div class="command-line">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~/systems</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <span class="command">cat README.md</span>
+          </div>
+          <div class="output">
+            <p>
+              <span class="ansi ansi-cyan">Systems</span>: Linux/Unix internals,
+              permissions, processes, I/O, filesystems, and security basics.
+            </p>
+            <div
+              class="category-posts"
+              data-tag="Systems"
+              aria-label="Systems posts"
+            >
+              <p class="blog-loading">Loading posts…</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="protocols" class="content-section">
+          <div class="command-line">
+            <span class="promptline" aria-hidden="true">
+              <span class="ansi ansi-green">jimcircuit</span
+              ><span class="ansi ansi-fg">@</span
+              ><span class="ansi ansi-green">web</span
+              ><span class="ansi ansi-fg">:</span
+              ><span class="ansi ansi-blue">~/protocols</span
+              ><span class="ansi ansi-fg">$</span>
+            </span>
+            <span class="command">grep -R "RFC" ./notes | head</span>
+          </div>
+          <div class="output">
+            <p>
+              <span class="ansi ansi-cyan">Protocols</span>: TCP/IP, HTTP, TLS,
+              DNS, and the rules-of-the-road between machines.
+            </p>
+            <div
+              class="category-posts"
+              data-tag="Protocols"
+              aria-label="Protocol posts"
+            >
+              <p class="blog-loading">Loading posts…</p>
+            </div>
           </div>
         </section>
 
@@ -178,6 +339,13 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
               behave like that?” deep dives—written like terminal notes you can
               actually reuse.
             </p>
+
+            <div class="about-cred" aria-label="Contact">
+              <p>
+                <span class="ansi ansi-cyan">Want a topic covered?</span> Drop a
+                comment on YouTube or message me on Instagram.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -194,15 +362,6 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
             <span class="command">ls | head</span>
           </div>
           <div class="output">
-            <div class="video-header">
-              <p>
-                <span class="ansi ansi-cyan">Sources</span>:
-                <span class="ansi ansi-magenta">Instagram</span> •
-                <span class="ansi ansi-magenta">YouTube</span> •
-                <span class="ansi ansi-magenta">TikTok</span>
-              </p>
-            </div>
-
             <div class="video-links" aria-label="Video platform links">
               <a
                 class="contact-link"
@@ -228,6 +387,91 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
               >
                 <i class="fab fa-tiktok"></i> TikTok
               </a>
+            </div>
+
+            <div class="videos-layout" aria-label="Video embeds">
+              <section
+                class="videos-panel"
+                id="ig-panel"
+                aria-label="Instagram reels"
+              >
+                <header class="videos-panel-header">
+                  <div class="videos-panel-title">
+                    <span class="ansi ansi-magenta">Instagram</span> Reels
+                  </div>
+                  <div class="videos-panel-actions">
+                    <button
+                      class="cta cta-secondary"
+                      type="button"
+                      id="videos-load-visible"
+                      hidden
+                    >
+                      Load previews
+                    </button>
+                    <span
+                      class="videos-count"
+                      id="ig-count"
+                      aria-live="polite"
+                    ></span>
+                    <button
+                      class="cta cta-secondary"
+                      type="button"
+                      id="videos-more"
+                      hidden
+                    >
+                      Show more
+                    </button>
+                  </div>
+                </header>
+
+                <div
+                  class="videos-grid ig-embeds"
+                  id="ig-embeds"
+                  aria-label="Instagram embeds"
+                >
+                  <p class="blog-loading">Loading Instagram embeds…</p>
+                </div>
+              </section>
+
+              <section
+                class="videos-panel"
+                id="yt-panel"
+                aria-label="YouTube videos"
+              >
+                <header class="videos-panel-header">
+                  <div class="videos-panel-title">
+                    <span class="ansi ansi-magenta">YouTube</span> Videos
+                  </div>
+                </header>
+
+                <div
+                  class="videos-grid yt-embeds"
+                  id="yt-embeds"
+                  aria-label="YouTube embeds"
+                >
+                  <p class="blog-loading">Loading YouTube embeds…</p>
+                </div>
+              </section>
+
+              <section
+                class="videos-panel"
+                id="tt-panel"
+                aria-label="TikTok videos"
+              >
+                <header class="videos-panel-header">
+                  <div class="videos-panel-title">
+                    <span class="ansi ansi-magenta">TikTok</span> Videos
+                  </div>
+                </header>
+
+                <div
+                  class="videos-grid tt-embeds"
+                  id="tt-embeds"
+                  aria-label="TikTok embeds"
+                >
+                  <p class="blog-loading">Loading TikTok embeds…</p>
+                </div>
+              </section>
             </div>
           </div>
         </section>
@@ -255,36 +499,6 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
             <div class="blog-list" id="blog-list" aria-label="Blog post list">
               <p class="blog-loading">Loading posts…</p>
             </div>
-
-            <article class="blog-post" id="blog-post" aria-label="Blog post">
-              <p class="blog-empty">Select a post from the list to read.</p>
-            </article>
-          </div>
-        </section>
-
-        <section id="shop" class="content-section">
-          <div class="command-line">
-            <span class="promptline" aria-hidden="true">
-              <span class="ansi ansi-green">jimcircuit</span
-              ><span class="ansi ansi-fg">@</span
-              ><span class="ansi ansi-green">web</span
-              ><span class="ansi ansi-fg">:</span
-              ><span class="ansi ansi-blue">~/shop</span
-              ><span class="ansi ansi-fg">$</span>
-            </span>
-            <span class="command">cat ~/shop.txt</span>
-          </div>
-          <div class="output">
-            <p>
-              <span class="ansi ansi-cyan">Status</span>: coming soon
-              <span class="ansi ansi-fg">(merch + digital drops)</span>
-            </p>
-          </div>
-
-          <div class="video-links" aria-label="Shop links">
-            <a class="contact-link" href="#" aria-disabled="true">
-              <i class="fa-solid fa-bag-shopping"></i> Shop (soon)
-            </a>
           </div>
         </section>
 
@@ -315,6 +529,35 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
             <span class="cursor" aria-hidden="true"></span>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Blog post modal overlay -->
+    <div
+      class="blog-modal"
+      id="blog-modal"
+      aria-modal="true"
+      role="dialog"
+      aria-label="Blog post"
+      hidden
+    >
+      <div class="blog-modal-backdrop" id="blog-modal-backdrop"></div>
+      <div class="blog-modal-window">
+        <button
+          class="blog-modal-close"
+          id="blog-modal-close"
+          type="button"
+          aria-label="Close"
+        >
+          &times;
+        </button>
+        <article
+          class="blog-post"
+          id="blog-post"
+          aria-label="Blog post content"
+        >
+          <p class="blog-loading">Loading…</p>
+        </article>
       </div>
     </div>
 
