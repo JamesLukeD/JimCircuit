@@ -201,6 +201,38 @@ function renderYouTubeEmbed(videoUrl) {
   `;
 }
 
+function isInstagramUrl(url) {
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    return u.hostname.includes("instagram.com");
+  } catch {
+    return false;
+  }
+}
+
+function renderInstagramEmbed(videoUrl) {
+  if (!videoUrl) return "";
+  const cleanUrl = videoUrl.endsWith("/") ? videoUrl : `${videoUrl}/`;
+  return `
+    <div class="ig-inline" aria-label="Embedded Instagram video">
+      <blockquote
+        class="instagram-media"
+        data-instgrm-permalink="${escapeHtml(cleanUrl)}"
+        data-instgrm-version="14"
+      ></blockquote>
+    </div>
+  `;
+}
+
+function renderVideoEmbed(videoUrl) {
+  if (!videoUrl) return "";
+  if (isInstagramUrl(videoUrl)) {
+    return renderInstagramEmbed(videoUrl);
+  }
+  return renderYouTubeEmbed(videoUrl);
+}
+
 let blogInitialized = false;
 let blogIndexPromise = null;
 let blogIndex = [];
@@ -294,13 +326,13 @@ function renderRelatedPosts(related) {
   const items = related
     .map(
       (p) => `
-        <button class="blog-item" type="button" data-slug="${escapeHtml(
-          p.slug,
-        )}" aria-label="Open related post ${escapeHtml(p.title)}">
-          <div class="blog-item-title">${escapeHtml(p.title)}</div>
-          ${p.date ? `<div class="blog-item-meta">${escapeHtml(p.date)}</div>` : ""}
-          ${p.summary ? `<div class="blog-item-summary">${escapeHtml(p.summary)}</div>` : ""}
-        </button>
+        <a class="blog-item" href="/blog/${escapeHtml(p.slug)}/" aria-label="Read ${escapeHtml(p.title)}">
+          <div class="blog-item-content">
+            <div class="blog-item-title">${escapeHtml(p.title)}</div>
+            ${p.date ? `<div class="blog-item-meta">${escapeHtml(p.date)}</div>` : ""}
+          </div>
+          <div class="blog-item-arrow">→</div>
+        </a>
       `,
     )
     .join("");
@@ -360,9 +392,31 @@ function renderBlogListWithFilter(posts) {
     document.getElementById("blog-list");
   if (!list) return;
 
-  const filtered = !activeBlogTag
+  let filtered = !activeBlogTag
     ? posts
     : posts.filter((p) => (p.tags || []).includes(activeBlogTag));
+
+  // Apply search filter if there's a search term
+  const searchInput = document.getElementById("blog-search-input");
+  if (searchInput && searchInput.value.trim()) {
+    const term = searchInput.value.trim().toLowerCase();
+    filtered = filtered.filter((p) => {
+      const title = (p.title || "").toLowerCase();
+      const summary = (p.summary || "").toLowerCase();
+      const tags = (p.tags || []).join(" ").toLowerCase();
+      return (
+        title.includes(term) || summary.includes(term) || tags.includes(term)
+      );
+    });
+  }
+
+  // Update results count
+  const countEl = document.getElementById("blog-results-count");
+  if (countEl && searchInput && searchInput.value.trim()) {
+    countEl.textContent = `${filtered.length} result${filtered.length !== 1 ? "s" : ""} found`;
+  } else if (countEl) {
+    countEl.textContent = "";
+  }
 
   // Update active pill styles
   const allLabel = "All";
@@ -377,6 +431,17 @@ function renderBlogListWithFilter(posts) {
 }
 
 function renderCategorySections(posts) {
+  const tagIcons = {
+    Linux: "🐧",
+    Security: "🔒",
+    Privacy: "🛡️",
+    Networking: "🌐",
+    Programming: "💻",
+    Tutorial: "📖",
+    Hardware: "🔧",
+    default: "📝",
+  };
+
   $all(".category-posts").forEach((host) => {
     const tag = host.getAttribute("data-tag") || "";
     const match = posts.filter((p) => (p.tags || []).includes(tag));
@@ -389,19 +454,17 @@ function renderCategorySections(posts) {
     host.innerHTML = match
       .slice(0, 5)
       .map((p) => {
-        const meta = [p.date].filter(Boolean).join(" • ");
+        const primaryTag = (p.tags || [])[0] || "default";
+        const icon = tagIcons[primaryTag] || tagIcons["default"];
         return `
-          <button class="blog-item" type="button" data-slug="${escapeHtml(
-            p.slug,
-          )}" aria-label="Open post ${escapeHtml(p.title)}">
-            <div class="blog-item-title">${escapeHtml(p.title)}</div>
-            ${meta ? `<div class="blog-item-meta">${escapeHtml(meta)}</div>` : ""}
-            ${
-              p.summary
-                ? `<div class="blog-item-summary">${escapeHtml(p.summary)}</div>`
-                : ""
-            }
-          </button>
+          <a class="blog-item" href="/blog/${escapeHtml(p.slug)}/" aria-label="Read ${escapeHtml(p.title)}">
+            <div class="blog-item-icon">${icon}</div>
+            <div class="blog-item-content">
+              <div class="blog-item-title">${escapeHtml(p.title)}</div>
+              ${p.date ? `<span class="blog-item-tag">${escapeHtml(p.date)}</span>` : ""}
+            </div>
+            <div class="blog-item-arrow">→</div>
+          </a>
         `;
       })
       .join("");
@@ -413,25 +476,43 @@ function renderBlogList(posts) {
   if (!list) return;
 
   if (!posts || posts.length === 0) {
-    list.innerHTML = '<p class="blog-empty">No posts yet.</p>';
+    list.innerHTML = '<p class="blog-empty">No posts found.</p>';
     return;
   }
 
+  const tagIcons = {
+    Linux: "🐧",
+    Security: "🔒",
+    Privacy: "🛡️",
+    Networking: "🌐",
+    Programming: "💻",
+    Tutorial: "📖",
+    Hardware: "🔧",
+    default: "📝",
+  };
+
   list.innerHTML = posts
     .map((p) => {
-      const meta = [p.date].filter(Boolean).join(" • ");
+      const primaryTag = (p.tags || [])[0] || "default";
+      const icon = tagIcons[primaryTag] || tagIcons["default"];
+      const tagsHtml = (p.tags || [])
+        .slice(0, 3)
+        .map((t) => `<span class="blog-item-tag">${escapeHtml(t)}</span>`)
+        .join("");
+
       return `
-        <button class="blog-item" type="button" data-slug="${escapeHtml(
-          p.slug,
-        )}" aria-label="Open post ${escapeHtml(p.title)}">
-          <div class="blog-item-title">${escapeHtml(p.title)}</div>
-          ${meta ? `<div class="blog-item-meta">${escapeHtml(meta)}</div>` : ""}
-          ${
-            p.summary
-              ? `<div class="blog-item-summary">${escapeHtml(p.summary)}</div>`
-              : ""
-          }
-        </button>
+        <a class="blog-item" href="/blog/${escapeHtml(p.slug)}/" aria-label="Read ${escapeHtml(p.title)}">
+          <div class="blog-item-icon">${icon}</div>
+          <div class="blog-item-content">
+            <div class="blog-item-title">${escapeHtml(p.title)}</div>
+            ${p.summary ? `<div class="blog-item-summary">${escapeHtml(p.summary)}</div>` : ""}
+            <div class="blog-item-tags">
+              ${tagsHtml}
+              ${p.date ? `<span class="blog-item-tag">${escapeHtml(p.date)}</span>` : ""}
+            </div>
+          </div>
+          <div class="blog-item-arrow">→</div>
+        </a>
       `;
     })
     .join("");
@@ -526,10 +607,15 @@ async function showBlogPost(slug) {
 
   postEl.innerHTML = `
     <header class="blog-post-header">${headerBits}</header>
-    ${post.videoUrl ? renderYouTubeEmbed(post.videoUrl) : ""}
+    ${post.videoUrl ? renderVideoEmbed(post.videoUrl) : ""}
     <div class="blog-post-body">${html}</div>
     ${renderRelatedPosts(related)}
   `;
+
+  // Process Instagram embeds if needed
+  if (post.videoUrl && isInstagramUrl(post.videoUrl)) {
+    setTimeout(() => processInstagramEmbeds(), 50);
+  }
 
   setBlogPostUrl(post.slug);
 }
@@ -591,6 +677,46 @@ async function ensureBlogInitialized() {
     renderBlogFilters(posts);
     renderBlogListWithFilter(posts);
     renderCategorySections(posts);
+
+    // Search functionality
+    const searchInput = document.getElementById("blog-search-input");
+    const searchClear = document.getElementById("blog-search-clear");
+    const searchWrap = searchInput?.parentElement;
+
+    if (searchInput) {
+      let debounceTimer;
+      searchInput.addEventListener("input", () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          if (searchWrap) {
+            searchWrap.classList.toggle(
+              "has-value",
+              searchInput.value.length > 0,
+            );
+          }
+          renderBlogListWithFilter(posts);
+        }, 150);
+      });
+
+      searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          searchInput.value = "";
+          if (searchWrap) searchWrap.classList.remove("has-value");
+          renderBlogListWithFilter(posts);
+        }
+      });
+    }
+
+    if (searchClear) {
+      searchClear.addEventListener("click", () => {
+        if (searchInput) {
+          searchInput.value = "";
+          if (searchWrap) searchWrap.classList.remove("has-value");
+          renderBlogListWithFilter(posts);
+          searchInput.focus();
+        }
+      });
+    }
 
     const initialSlug = new URLSearchParams(location.search).get("post");
     if (initialSlug) {

@@ -1,6 +1,24 @@
 {
   "posts": [
     {
+      "slug": "linux-help-line",
+      "title": "The Linux Help Line: Understanding --help, man, and type",
+      "date": "2026-01-27",
+      "summary": "Learn how to access help for any Linux command using --help, man pages, and the type command to understand built-ins, aliases, and binaries.",
+      "markdown": "posts/2026-01-27-linux-help-line.md",
+      "videoUrl": "https://www.youtube.com/shorts/n6DEwUiFL-0",
+      "tags": ["Systems", "Linux", "Terminal", "Commands"],
+      "keywords": [
+        "linux help",
+        "man pages",
+        "--help command",
+        "type command",
+        "shell built-in",
+        "linux alias",
+        "linux terminal"
+      ]
+    },
+    {
       "slug": "unauthorised-access",
       "title": "Understanding UIDs and Root Access",
       "date": "2026-01-18",

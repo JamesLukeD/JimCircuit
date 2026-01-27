@@ -46,7 +46,7 @@
       // Avoid a flash of prompts before the boot animation runs.
       document.documentElement.classList.add("boot-prep");
     </script>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=3" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -498,6 +498,26 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
           </div>
 
           <div class="blog-wrap" aria-label="Blog posts">
+            <div class="blog-search" id="blog-search">
+              <div class="blog-search-wrap">
+                <span class="blog-search-icon">🔍</span>
+                <input
+                  type="text"
+                  class="blog-search-input"
+                  id="blog-search-input"
+                  placeholder="Search posts..."
+                  aria-label="Search blog posts"
+                />
+                <button
+                  class="blog-search-clear"
+                  id="blog-search-clear"
+                  aria-label="Clear search"
+                >
+                  ✕
+                </button>
+              </div>
+              <div class="blog-results-count" id="blog-results-count"></div>
+            </div>
             <div class="blog-list" id="blog-list" aria-label="Blog post list">
               <p class="blog-loading">Loading posts…</p>
             </div>
