@@ -65,21 +65,22 @@
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <header class="site-header" aria-label="Primary navigation">
+    <!-- Sticky Header -->
+    <header class="site-header" id="site-header">
       <div class="site-header-inner">
         <a class="site-brand" href="#home" aria-label="JimCircuit home">
           <img
             class="site-brand-logo"
             src="assets/jimcircuit-logo.svg"
-            alt="JimCircuit"
-            width="28"
-            height="28"
+            alt=""
+            width="32"
+            height="32"
             decoding="async"
           />
           <span class="site-brand-name">JimCircuit</span>
         </a>
 
-        <nav class="site-nav" aria-label="Main">
+        <nav class="site-nav" id="site-nav" aria-label="Main">
           <a class="site-nav-link" href="#home">Home</a>
           <a class="site-nav-link" href="#networking">Networking</a>
           <a class="site-nav-link" href="#systems">Systems</a>
@@ -87,18 +88,27 @@
           <a class="site-nav-link" href="#videos">Videos</a>
           <a class="site-nav-link" href="#blog">Blog</a>
           <a class="site-nav-link" href="#about">About</a>
-        </nav>
-
-        <div class="site-ctas" aria-label="Primary call to actions">
           <a
-            class="cta cta-primary"
+            class="site-nav-link site-nav-cta"
             href="https://www.youtube.com/@jimcircuit"
             target="_blank"
             rel="noreferrer noopener"
+            >Subscribe</a
           >
-            Subscribe
-          </a>
-        </div>
+        </nav>
+
+        <button
+          class="hamburger"
+          id="hamburger"
+          type="button"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+          aria-controls="site-nav"
+        >
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
       </div>
     </header>
 
@@ -150,14 +160,6 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
               Messing around with the internet and how it moves.
             </div>
           </div>
-        </div>
-
-        <!-- Command hints -->
-        <div class="terminal-hint" aria-label="Command hints">
-          <span class="nav-hint"
-            >Try: <span class="ansi ansi-magenta">help</span>,
-            <span class="ansi ansi-magenta">clear</span></span
-          >
         </div>
 
         <!-- Main Content Sections -->

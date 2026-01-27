@@ -657,14 +657,13 @@ function activateSection(targetId) {
   if (link) link.classList.add("active");
   section.classList.add("active");
 
-  // Sync top navbar state
+  // Sync header nav state
   $all(".site-nav-link").forEach((l) => l.removeAttribute("aria-current"));
-  const top = document.querySelector(`.site-nav-link[href="#${targetId}"]`);
-  if (top) top.setAttribute("aria-current", "page");
+  const navLink = document.querySelector(`.site-nav-link[href="#${targetId}"]`);
+  if (navLink) navLink.setAttribute("aria-current", "page");
 
-  // When switching sections, show the new content (especially helpful on mobile).
-  const scroller = $(".terminal-content");
-  if (scroller) scroller.scrollTop = 0;
+  // Scroll to the section so it's visible
+  section.scrollIntoView({ behavior: "smooth", block: "start" });
 
   // Keep the URL in sync (nice for refresh/share)
   setSectionUrl(targetId);
@@ -1268,11 +1267,39 @@ function runCommand(rawInput) {
 document.addEventListener("DOMContentLoaded", () => {
   const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
-  // Top navbar click support (shares the same section activator)
-  $all(".site-nav-link").forEach((link) => {
+  // Hamburger menu toggle
+  const hamburger = document.getElementById("hamburger");
+  const siteNav = document.getElementById("site-nav");
+  const siteHeader = document.getElementById("site-header");
+
+  function closeMenu() {
+    hamburger?.setAttribute("aria-expanded", "false");
+    siteNav?.classList.remove("open");
+    siteHeader?.classList.remove("menu-open");
+  }
+
+  function toggleMenu() {
+    const isOpen = hamburger?.getAttribute("aria-expanded") === "true";
+    hamburger?.setAttribute("aria-expanded", isOpen ? "false" : "true");
+    siteNav?.classList.toggle("open", !isOpen);
+    siteHeader?.classList.toggle("menu-open", !isOpen);
+  }
+
+  hamburger?.addEventListener("click", toggleMenu);
+
+  // Close menu when clicking overlay
+  siteHeader?.addEventListener("click", (e) => {
+    if (e.target === siteHeader && siteHeader.classList.contains("menu-open")) {
+      closeMenu();
+    }
+  });
+
+  // Header nav link clicks
+  $all(".site-nav-link:not(.site-nav-cta)").forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
       const target = link.getAttribute("href").slice(1);
+      closeMenu();
       if (activateSection(target)) {
         const cli = $("#cli");
         if (cli && !isCoarsePointer) cli.focus();
