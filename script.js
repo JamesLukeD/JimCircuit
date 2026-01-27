@@ -794,6 +794,20 @@ function instagramShortLabel(url) {
   }
 }
 
+function extractInstagramId(url) {
+  try {
+    const u = new URL(url);
+    const parts = u.pathname.split("/").filter(Boolean);
+    // Handle /reel/ABC123/ or /p/ABC123/
+    const idx = parts.findIndex((p) => p === "reel" || p === "p");
+    if (idx !== -1 && parts[idx + 1]) return parts[idx + 1];
+    // Fallback: return last non-empty segment
+    return parts[parts.length - 1] || "";
+  } catch {
+    return "";
+  }
+}
+
 function renderInstagramEmbeds(urls) {
   const host = document.getElementById("ig-embeds");
   if (!host) return;
@@ -854,15 +868,25 @@ function renderInstagramEmbeds(urls) {
         <div class="video-card" data-ig-url="${escapeHtml(u)}" aria-label="Instagram ${escapeHtml(
           instagramShortLabel(u),
         )}">
-          <div class="video-card-title">${escapeHtml(
-            instagramShortLabel(u),
-          )}</div>
-          <div class="video-card-meta">Lightweight card (fast). Click preview to load embed.</div>
-          <div class="video-card-actions">
-            <a class="cta cta-secondary" href="${escapeHtml(
-              u,
-            )}" target="_blank" rel="noreferrer noopener">Open</a>
-            <button class="cta cta-primary ig-preview" type="button">Preview</button>
+          <div class="video-card-thumb">
+            <img 
+              src="https://www.instagram.com/p/${escapeHtml(extractInstagramId(u))}/media/?size=m" 
+              alt="Instagram thumbnail"
+              loading="lazy"
+              onerror="this.parentElement.classList.add('thumb-error')"
+            />
+            <button class="video-card-play ig-preview" type="button" aria-label="Preview">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="24" r="24" fill="rgba(0,0,0,0.6)"/>
+                <path d="M19 15L35 24L19 33V15Z" fill="white"/>
+              </svg>
+            </button>
+          </div>
+          <div class="video-card-info">
+            <div class="video-card-title">${escapeHtml(instagramShortLabel(u))}</div>
+            <a class="video-card-link" href="${escapeHtml(u)}" target="_blank" rel="noreferrer noopener">
+              <i class="fab fa-instagram"></i> Open on Instagram
+            </a>
           </div>
         </div>
       `;
