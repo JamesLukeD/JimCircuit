@@ -15,21 +15,32 @@ const OUTPUT_DIR = "./blog";
 
 // Simple marked-like markdown parser (basic subset)
 function parseMarkdown(md) {
+  // Store code blocks temporarily to protect them from other transforms
+  const codeBlocks = [];
   let html = md
-    // Code blocks (```lang ... ```)
+    // Extract and protect code blocks (```lang ... ```)
     .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
-      return `<pre><code class="language-${lang || "text"}">${escapeHtml(code.trim())}</code></pre>`;
-    })
-    // Inline code
+      const placeholder = `\x00CODEBLOCK${codeBlocks.length}\x00`;
+      codeBlocks.push(
+        `<pre><code class="language-${lang || "text"}">${escapeHtml(code.trim())}</code></pre>`,
+      );
+      return placeholder;
+    });
+
+  // Now process inline elements
+  html = html
+    // Inline code (must come before italic/bold to protect backticks)
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     // Headers
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/^## (.+)$/gm, "<h2>$1</h2>")
     .replace(/^# (.+)$/gm, "<h1>$1</h1>")
-    // Bold
+    // Bold (** or __)
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    // Italic
-    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/__(.+?)__/g, "<strong>$1</strong>")
+    // Italic (* or _) - use word boundaries to avoid matching paths like /usr/bin
+    .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+    .replace(/(?<![\/\w])_([^_]+)_(?![\/\w])/g, "<em>$1</em>")
     // Links
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
     // Unordered lists
@@ -40,10 +51,16 @@ function parseMarkdown(md) {
       block = block.trim();
       if (!block) return "";
       if (block.startsWith("<")) return block; // Already HTML
+      if (block.startsWith("\x00CODEBLOCK")) return block; // Protected code block
       if (block.includes("<li>")) return `<ul>${block}</ul>`;
       return `<p>${block.replace(/\n/g, "<br>")}</p>`;
     })
     .join("\n");
+
+  // Restore code blocks
+  codeBlocks.forEach((code, i) => {
+    html = html.replace(`\x00CODEBLOCK${i}\x00`, code);
+  });
 
   return html;
 }
