@@ -4,7 +4,7 @@ slug: kill-and-yank
 date: 2026-01-28
 summary: Before 'cut and paste' there was 'kill and yank' - a piece of computing
   lore from the UNIX era.
-videoUrl: https://www.instagram.com/reel/DTnPqmmioAv/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==
+videoUrl: https://www.youtube.com/shorts/yeb35Df4q1I
 tags:
   - Lore
   - Terminal
