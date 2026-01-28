@@ -1524,6 +1524,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.remove("boot-prep");
   }
 
+  // Load category sections (Networking, Systems, Protocols, Lore) on page load
+  // This ensures they're populated even if user doesn't visit Blog first
+  loadBlogIndex()
+    .then((posts) => {
+      renderCategorySections(posts);
+    })
+    .catch(() => {
+      // Silently fail - categories will show "Loading..." or empty
+    });
+
   // Boot animation on first load (Home only)
   // Skip entirely if this is a Netlify Identity flow (invite, confirmation, etc.)
   const isIdentityFlow = window.netlifyIdentityFlow === true;
