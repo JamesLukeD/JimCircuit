@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: JamesLukeD/JimCircuit
   branch: main
 
 # For local development, uncomment this:
