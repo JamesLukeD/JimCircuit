@@ -1,9 +1,6 @@
 backend:
-  name: github
-  repo: JamesLukeD/JimCircuit
+  name: git-gateway
   branch: main
-  base_url: https://api.netlify.com
-  auth_endpoint: auth
 
 # For local development, uncomment this:
 # local_backend: true
