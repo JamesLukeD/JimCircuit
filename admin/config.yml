@@ -1,0 +1,91 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# For local development, uncomment this:
+# local_backend: true
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+# Site URL for preview
+site_url: https://jimcircuit.net
+display_url: https://jimcircuit.net
+
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "yaml-frontmatter"
+    editor:
+      preview: true
+    sortable_fields: ["date", "title"]
+    summary: "{{title}} ({{date}})"
+    fields:
+      - label: "Title"
+        name: "title"
+        widget: "string"
+        required: true
+
+      - label: "URL Slug"
+        name: "slug"
+        widget: "string"
+        required: true
+        hint: "URL-friendly name (e.g., 'linux-help-line')"
+        pattern: ['^[a-z0-9-]+$', "Only lowercase letters, numbers, and hyphens"]
+
+      - label: "Publish Date"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        required: true
+
+      - label: "Summary"
+        name: "summary"
+        widget: "text"
+        required: true
+        hint: "Brief description for SEO and post previews (1-2 sentences)"
+
+      - label: "Video URL"
+        name: "videoUrl"
+        widget: "string"
+        required: false
+        hint: "YouTube or Instagram video URL (optional)"
+
+      - label: "Categories"
+        name: "tags"
+        widget: "select"
+        multiple: true
+        required: true
+        hint: "Which sections should this post appear in?"
+        options:
+          - { label: "Networking", value: "Networking" }
+          - { label: "Systems", value: "Systems" }
+          - { label: "Protocols", value: "Protocols" }
+          - { label: "Lore", value: "Lore" }
+          - { label: "Security", value: "Security" }
+          - { label: "Linux", value: "Linux" }
+          - { label: "Terminal", value: "Terminal" }
+          - { label: "Commands", value: "Commands" }
+          - { label: "Permissions", value: "Permissions" }
+
+      - label: "Keywords"
+        name: "keywords"
+        widget: "list"
+        required: false
+        hint: "SEO keywords for search engines"
+
+      - label: "Content"
+        name: "body"
+        widget: "markdown"
+        required: true

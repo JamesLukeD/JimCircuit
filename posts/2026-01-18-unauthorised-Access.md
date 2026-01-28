@@ -1,8 +1,22 @@
-# Understanding UIDs and Root Access: Permission Denied
-
-## Video
-
-- https://www.youtube.com/shorts/SmrlJrirxYg
+---
+title: "Understanding UIDs and Root Access"
+slug: unauthorised-access
+date: 2026-01-18
+summary: "Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system."
+videoUrl: "https://www.youtube.com/shorts/SmrlJrirxYg"
+tags:
+  - Systems
+  - Linux
+  - Permissions
+  - Security
+  - Protocols
+keywords:
+  - linux permissions
+  - uid 0 root
+  - permission denied
+  - file ownership
+  - how linux permissions work
+---
 
 Have you ever tried to open a file in Linux and saw the "Permission Denied" message? It’s because Linux uses your user identity to secure important parts of the system. Understanding how Linux manages these permissions helps you understand why you see this message.
 

@@ -1,13 +1,39 @@
 {
   "posts": [
     {
+      "slug": "kill-and-yank",
+      "title": "Kill and Yank: The Original Cut and Paste",
+      "date": "2026-01-28",
+      "summary": "Before 'cut and paste' there was 'kill and yank' - a piece of computing lore from the UNIX era.",
+      "markdown": "posts/2026-01-28-kill-and-yank.md",
+      "videoUrl": "",
+      "tags": [
+        "Lore",
+        "Terminal",
+        "Linux"
+      ],
+      "keywords": [
+        "kill and yank",
+        "cut and paste history",
+        "emacs kill ring",
+        "unix history",
+        "ctrl+k ctrl+y",
+        "terminal lore"
+      ]
+    },
+    {
       "slug": "linux-help-line",
       "title": "The Linux Help Line: Understanding --help, man, and type",
       "date": "2026-01-27",
       "summary": "Learn how to access help for any Linux command using --help, man pages, and the type command to understand built-ins, aliases, and binaries.",
       "markdown": "posts/2026-01-27-linux-help-line.md",
       "videoUrl": "https://www.youtube.com/shorts/n6DEwUiFL-0",
-      "tags": ["Systems", "Linux", "Terminal", "Commands"],
+      "tags": [
+        "Systems",
+        "Linux",
+        "Terminal",
+        "Commands"
+      ],
       "keywords": [
         "linux help",
         "man pages",
@@ -25,7 +51,13 @@
       "summary": "Why you see Permission Denied, what UID 0 means, and how file ownership/permissions protect the system.",
       "markdown": "posts/2026-01-18-unauthorised-Access.md",
       "videoUrl": "https://www.youtube.com/shorts/SmrlJrirxYg",
-      "tags": ["Systems", "Linux", "Permissions", "Security", "Protocols"],
+      "tags": [
+        "Systems",
+        "Linux",
+        "Permissions",
+        "Security",
+        "Protocols"
+      ],
       "keywords": [
         "linux permissions",
         "uid 0 root",

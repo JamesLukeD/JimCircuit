@@ -1,8 +1,23 @@
-# The Linux Help Line: Understanding --help, man, and type
-
-## Video
-
-- https://www.youtube.com/shorts/n6DEwUiFL-0
+---
+title: "The Linux Help Line: Understanding --help, man, and type"
+slug: linux-help-line
+date: 2026-01-27
+summary: "Learn how to access help for any Linux command using --help, man pages, and the type command to understand built-ins, aliases, and binaries."
+videoUrl: "https://www.youtube.com/shorts/n6DEwUiFL-0"
+tags:
+  - Systems
+  - Linux
+  - Terminal
+  - Commands
+keywords:
+  - linux help
+  - man pages
+  - --help command
+  - type command
+  - shell built-in
+  - linux alias
+  - linux terminal
+---
 
 There will come a time in all of our Linux journeys where we can't seem to remember or would perhaps like to discover new options for the command we are using.
 

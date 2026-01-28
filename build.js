@@ -3,6 +3,7 @@
  * JimCircuit Static Blog Builder
  *
  * Generates static HTML pages for each blog post for better SEO.
+ * Reads posts from markdown files with YAML frontmatter.
  * Run: node build.js
  */
 
@@ -10,8 +11,115 @@ const fs = require("fs");
 const path = require("path");
 
 const SITE_URL = "https://jimcircuit.net";
+const POSTS_DIR = "./posts";
 const POSTS_JSON = "./posts/posts.json";
 const OUTPUT_DIR = "./blog";
+
+// Parse YAML frontmatter from markdown
+function parseFrontmatter(content) {
+  const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
+  const match = content.match(frontmatterRegex);
+  
+  if (!match) {
+    return { frontmatter: {}, body: content };
+  }
+  
+  const yamlStr = match[1];
+  const body = match[2];
+  const frontmatter = {};
+  
+  // Simple YAML parser for our use case
+  let currentKey = null;
+  let currentArray = null;
+  
+  for (const line of yamlStr.split('\n')) {
+    // Array item
+    if (line.match(/^\s+-\s+(.+)$/)) {
+      const value = line.match(/^\s+-\s+(.+)$/)[1].trim();
+      if (currentArray && currentKey) {
+        frontmatter[currentKey].push(value);
+      }
+      continue;
+    }
+    
+    // Key-value pair
+    const kvMatch = line.match(/^(\w+):\s*(.*)$/);
+    if (kvMatch) {
+      const key = kvMatch[1];
+      let value = kvMatch[2].trim();
+      
+      // Check if it's starting an array
+      if (value === '') {
+        frontmatter[key] = [];
+        currentKey = key;
+        currentArray = true;
+      } else {
+        // Remove quotes if present
+        if ((value.startsWith('"') && value.endsWith('"')) || 
+            (value.startsWith("'") && value.endsWith("'"))) {
+          value = value.slice(1, -1);
+        }
+        frontmatter[key] = value;
+        currentArray = false;
+      }
+    }
+  }
+  
+  return { frontmatter, body };
+}
+
+// Read all posts from markdown files with frontmatter
+function readPostsFromMarkdown() {
+  const posts = [];
+  const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
+  
+  for (const file of files) {
+    const filePath = path.join(POSTS_DIR, file);
+    const content = fs.readFileSync(filePath, 'utf8');
+    const { frontmatter, body } = parseFrontmatter(content);
+    
+    if (!frontmatter.slug || !frontmatter.title) {
+      console.log(`   ⚠️  Skipping ${file}: missing slug or title in frontmatter`);
+      continue;
+    }
+    
+    posts.push({
+      slug: frontmatter.slug,
+      title: frontmatter.title,
+      date: frontmatter.date || new Date().toISOString().split('T')[0],
+      summary: frontmatter.summary || '',
+      videoUrl: frontmatter.videoUrl || '',
+      tags: frontmatter.tags || [],
+      keywords: frontmatter.keywords || [],
+      markdown: `posts/${file}`,
+      body: body
+    });
+  }
+  
+  // Sort by date descending
+  posts.sort((a, b) => b.date.localeCompare(a.date));
+  
+  return posts;
+}
+
+// Update posts.json from frontmatter (for backwards compatibility)
+function updatePostsJson(posts) {
+  const jsonData = {
+    posts: posts.map(p => ({
+      slug: p.slug,
+      title: p.title,
+      date: p.date,
+      summary: p.summary,
+      markdown: p.markdown,
+      videoUrl: p.videoUrl,
+      tags: p.tags,
+      keywords: p.keywords
+    }))
+  };
+  
+  fs.writeFileSync(POSTS_JSON, JSON.stringify(jsonData, null, 2) + '\n');
+  console.log(`📋 Updated: ${POSTS_JSON}`);
+}
 
 // Simple marked-like markdown parser (basic subset)
 function parseMarkdown(md) {
@@ -193,146 +301,12 @@ function generatePostHTML(post, content) {
 
     <link rel="icon" href="../../assets/jimcircuit-logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="../../blog.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <script type="application/ld+json">
 ${JSON.stringify(schemaData, null, 2)}
     </script>
-
-    <style>
-      /* Blog post page specific styles */
-      .blog-page {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-      .blog-page-header {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 16px 0;
-        border-bottom: 1px solid var(--term-border);
-        margin-bottom: 24px;
-      }
-      .blog-page-brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        text-decoration: none;
-        color: var(--term-fg);
-      }
-      .blog-page-brand img {
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
-      }
-      .blog-page-brand span {
-        font-weight: 700;
-        font-size: 14px;
-        letter-spacing: 0.04em;
-      }
-      .blog-page-nav {
-        margin-left: auto;
-        display: flex;
-        gap: 12px;
-      }
-      .blog-page-nav a {
-        color: var(--term-fg-dim);
-        text-decoration: none;
-        font-size: 13px;
-        padding: 8px 12px;
-        border-radius: 8px;
-        transition: background 150ms ease, color 150ms ease;
-      }
-      .blog-page-nav a:hover {
-        background: rgba(255,255,255,0.06);
-        color: var(--term-fg);
-      }
-      .blog-page-content {
-        background: var(--term-bg);
-        border: 1px solid var(--term-border-strong);
-        border-radius: 12px;
-        padding: 32px;
-      }
-      .blog-page-title {
-        font-size: 28px;
-        font-weight: 700;
-        margin: 0 0 8px 0;
-        line-height: 1.3;
-      }
-      .blog-page-meta {
-        color: var(--term-fg-dim);
-        font-size: 13px;
-        margin-bottom: 20px;
-      }
-      .blog-page-body {
-        line-height: 1.7;
-        font-size: 16px;
-      }
-      .blog-page-body h2 {
-        margin: 28px 0 14px 0;
-        font-size: 22px;
-        color: var(--ansi-cyan);
-      }
-      .blog-page-body h3 {
-        margin: 20px 0 10px 0;
-        font-size: 18px;
-      }
-      .blog-page-body p {
-        margin: 0 0 16px 0;
-        font-size: 16px;
-      }
-      .blog-page-body pre {
-        background: rgba(0,0,0,0.3);
-        border: 1px solid var(--term-border);
-        border-radius: 8px;
-        padding: 16px;
-        overflow-x: auto;
-        margin: 16px 0;
-        font-size: 14px;
-      }
-      .blog-page-body code {
-        font-family: "Courier New", monospace;
-        font-size: inherit;
-      }
-      .blog-page-body p code {
-        background: rgba(0,0,0,0.25);
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 14px;
-      }
-      .blog-page-body ul {
-        margin: 16px 0;
-        padding-left: 24px;
-        font-size: 16px;
-      }
-      .blog-page-body li {
-        margin: 8px 0;
-      }
-      .blog-page-back {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        margin-top: 24px;
-        padding: 10px 16px;
-        background: rgba(192, 97, 203, 0.15);
-        border: 1px solid rgba(192, 97, 203, 0.3);
-        border-radius: 8px;
-        color: var(--term-fg);
-        text-decoration: none;
-        font-size: 13px;
-        transition: background 150ms ease;
-      }
-      .blog-page-back:hover {
-        background: rgba(192, 97, 203, 0.25);
-      }
-      @media (max-width: 600px) {
-        .blog-page { padding: 12px; }
-        .blog-page-content { padding: 20px; }
-        .blog-page-title { font-size: 22px; }
-        .blog-page-nav { display: none; }
-      }
-    </style>
   </head>
   <body>
     <div class="blog-page">
@@ -396,14 +370,16 @@ function generateSitemap(posts) {
 function build() {
   console.log("🔨 Building JimCircuit static pages...\n");
 
-  // Read posts index
-  const postsData = JSON.parse(fs.readFileSync(POSTS_JSON, "utf8"));
-  const posts = postsData.posts || [];
+  // Read posts from markdown files with frontmatter
+  const posts = readPostsFromMarkdown();
 
   if (posts.length === 0) {
-    console.log("No posts found in posts.json");
+    console.log("No posts found in posts/ directory");
     return;
   }
+
+  // Update posts.json for backwards compatibility (used by main site)
+  updatePostsJson(posts);
 
   // Create output directory
   if (!fs.existsSync(OUTPUT_DIR)) {
@@ -414,20 +390,7 @@ function build() {
   for (const post of posts) {
     console.log(`📝 Building: ${post.slug}`);
 
-    // Read markdown
-    const mdPath = path.join(".", post.markdown);
-    if (!fs.existsSync(mdPath)) {
-      console.log(`   ⚠️  Markdown not found: ${mdPath}`);
-      continue;
-    }
-
-    let mdContent = fs.readFileSync(mdPath, "utf8");
-
-    // Remove front matter or title if duplicated
-    mdContent = mdContent.replace(/^#\s+.+\n+/, ""); // Remove first H1
-    mdContent = mdContent.replace(/^## Video\n+- .+\n+/m, ""); // Remove video link section
-
-    const htmlContent = parseMarkdown(mdContent);
+    const htmlContent = parseMarkdown(post.body);
     const pageHtml = generatePostHTML(post, htmlContent);
 
     // Create directory for post
