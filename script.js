@@ -1500,17 +1500,33 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Deep link support
-  const initial = (location.hash || "#home").slice(1);
-  if (!activateSection(initial)) {
-    activateSection("home");
-  }
+  // Skip if this is a Netlify Identity callback (confirmation, recovery, invite tokens)
+  const hash = location.hash || "#home";
+  const isNetlifyIdentityCallback = hash.includes("confirmation_token") || 
+                                     hash.includes("recovery_token") || 
+                                     hash.includes("invite_token") ||
+                                     hash.includes("access_token");
+  
+  let initial = "home";
+  if (!isNetlifyIdentityCallback) {
+    initial = hash.slice(1);
+    if (!activateSection(initial)) {
+      activateSection("home");
+      initial = "home";
+    }
 
-  // Ensure initial meta reflects initial route (unless blog post overrides).
-  if (initial !== "blog") {
-    setSectionMeta(initial);
+    // Ensure initial meta reflects initial route (unless blog post overrides).
+    if (initial !== "blog") {
+      setSectionMeta(initial);
+    }
+  } else {
+    // For identity flows, remove boot-prep immediately so page is visible
+    document.documentElement.classList.remove("boot-prep");
   }
 
   // Boot animation on first load (Home only)
+  // Skip entirely if this is a Netlify Identity flow (invite, confirmation, etc.)
+  const isIdentityFlow = window.netlifyIdentityFlow === true;
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
@@ -1519,6 +1535,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const navEntry = performance.getEntriesByType("navigation")[0];
   const isReload = navEntry && navEntry.type === "reload";
   const shouldBoot =
+    !isIdentityFlow &&
     !reduceMotion &&
     initial === "home" &&
     (forceBoot || isReload || !alreadyBooted);
