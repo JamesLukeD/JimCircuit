@@ -42,6 +42,10 @@
 
     <title>JimCircuit - Exploring the Internet</title>
     <link rel="icon" href="assets/jimcircuit-logo.svg" type="image/svg+xml" />
+
+    <!-- Netlify Identity Widget (must load early for confirmation links) -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
     <script>
       // Avoid a flash of prompts before the boot animation runs.
       document.documentElement.classList.add("boot-prep");
@@ -336,11 +340,7 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
               <span class="ansi ansi-cyan">Lore</span>: The forgotten stories,
               quirks, and "why is it like that?" moments from computing history.
             </p>
-            <div
-              class="category-posts"
-              data-tag="Lore"
-              aria-label="Lore posts"
-            >
+            <div class="category-posts" data-tag="Lore" aria-label="Lore posts">
               <p class="blog-loading">Loading posts…</p>
             </div>
           </div>
@@ -703,12 +703,11 @@ Type <span class="ansi ansi-magenta">help</span> to see commands.
     <script src="script.js"></script>
     <script async src="https://www.instagram.com/embed.js"></script>
     <script async src="https://www.tiktok.com/embed.js"></script>
-    
-    <!-- Netlify Identity Widget (handles invite/reset redirects) -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <!-- Handle Netlify Identity redirects -->
     <script>
       if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
+        window.netlifyIdentity.on("init", (user) => {
           if (!user) {
             window.netlifyIdentity.on("login", () => {
               document.location.href = "/admin/";

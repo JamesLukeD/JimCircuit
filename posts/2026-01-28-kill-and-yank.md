@@ -27,11 +27,11 @@ This is essentially a type of buffer which in turn can be "Yanked" out of the ~~
 
 ## The Commands
 
-| Action | Shortcut | What it does |
-|--------|----------|--------------|
-| Kill | `Ctrl+K` | Removes text from cursor to end of line, stores in kill ring |
-| Yank | `Ctrl+Y` | Pastes the most recent kill |
-| Yank Pop | `Alt+Y` | Cycle through older kills (after yanking) |
+| Action   | Shortcut | What it does                                                 |
+| -------- | -------- | ------------------------------------------------------------ |
+| Kill     | `Ctrl+K` | Removes text from cursor to end of line, stores in kill ring |
+| Yank     | `Ctrl+Y` | Pastes the most recent kill                                  |
+| Yank Pop | `Alt+Y`  | Cycle through older kills (after yanking)                    |
 
 ## Conclusion
 

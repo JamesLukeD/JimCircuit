@@ -19,20 +19,20 @@ const OUTPUT_DIR = "./blog";
 function parseFrontmatter(content) {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
   const match = content.match(frontmatterRegex);
-  
+
   if (!match) {
     return { frontmatter: {}, body: content };
   }
-  
+
   const yamlStr = match[1];
   const body = match[2];
   const frontmatter = {};
-  
+
   // Simple YAML parser for our use case
   let currentKey = null;
   let currentArray = null;
-  
-  for (const line of yamlStr.split('\n')) {
+
+  for (const line of yamlStr.split("\n")) {
     // Array item
     if (line.match(/^\s+-\s+(.+)$/)) {
       const value = line.match(/^\s+-\s+(.+)$/)[1].trim();
@@ -41,22 +41,24 @@ function parseFrontmatter(content) {
       }
       continue;
     }
-    
+
     // Key-value pair
     const kvMatch = line.match(/^(\w+):\s*(.*)$/);
     if (kvMatch) {
       const key = kvMatch[1];
       let value = kvMatch[2].trim();
-      
+
       // Check if it's starting an array
-      if (value === '') {
+      if (value === "") {
         frontmatter[key] = [];
         currentKey = key;
         currentArray = true;
       } else {
         // Remove quotes if present
-        if ((value.startsWith('"') && value.endsWith('"')) || 
-            (value.startsWith("'") && value.endsWith("'"))) {
+        if (
+          (value.startsWith('"') && value.endsWith('"')) ||
+          (value.startsWith("'") && value.endsWith("'"))
+        ) {
           value = value.slice(1, -1);
         }
         frontmatter[key] = value;
@@ -64,48 +66,50 @@ function parseFrontmatter(content) {
       }
     }
   }
-  
+
   return { frontmatter, body };
 }
 
 // Read all posts from markdown files with frontmatter
 function readPostsFromMarkdown() {
   const posts = [];
-  const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
-  
+  const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md"));
+
   for (const file of files) {
     const filePath = path.join(POSTS_DIR, file);
-    const content = fs.readFileSync(filePath, 'utf8');
+    const content = fs.readFileSync(filePath, "utf8");
     const { frontmatter, body } = parseFrontmatter(content);
-    
+
     if (!frontmatter.slug || !frontmatter.title) {
-      console.log(`   ⚠️  Skipping ${file}: missing slug or title in frontmatter`);
+      console.log(
+        `   ⚠️  Skipping ${file}: missing slug or title in frontmatter`,
+      );
       continue;
     }
-    
+
     posts.push({
       slug: frontmatter.slug,
       title: frontmatter.title,
-      date: frontmatter.date || new Date().toISOString().split('T')[0],
-      summary: frontmatter.summary || '',
-      videoUrl: frontmatter.videoUrl || '',
+      date: frontmatter.date || new Date().toISOString().split("T")[0],
+      summary: frontmatter.summary || "",
+      videoUrl: frontmatter.videoUrl || "",
       tags: frontmatter.tags || [],
       keywords: frontmatter.keywords || [],
       markdown: `posts/${file}`,
-      body: body
+      body: body,
     });
   }
-  
+
   // Sort by date descending
   posts.sort((a, b) => b.date.localeCompare(a.date));
-  
+
   return posts;
 }
 
 // Update posts.json from frontmatter (for backwards compatibility)
 function updatePostsJson(posts) {
   const jsonData = {
-    posts: posts.map(p => ({
+    posts: posts.map((p) => ({
       slug: p.slug,
       title: p.title,
       date: p.date,
@@ -113,11 +117,11 @@ function updatePostsJson(posts) {
       markdown: p.markdown,
       videoUrl: p.videoUrl,
       tags: p.tags,
-      keywords: p.keywords
-    }))
+      keywords: p.keywords,
+    })),
   };
-  
-  fs.writeFileSync(POSTS_JSON, JSON.stringify(jsonData, null, 2) + '\n');
+
+  fs.writeFileSync(POSTS_JSON, JSON.stringify(jsonData, null, 2) + "\n");
   console.log(`📋 Updated: ${POSTS_JSON}`);
 }
 

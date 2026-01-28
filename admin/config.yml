@@ -40,7 +40,8 @@ collections:
         widget: "string"
         required: true
         hint: "URL-friendly name (e.g., 'linux-help-line')"
-        pattern: ['^[a-z0-9-]+$', "Only lowercase letters, numbers, and hyphens"]
+        pattern:
+          ["^[a-z0-9-]+$", "Only lowercase letters, numbers, and hyphens"]
 
       - label: "Publish Date"
         name: "date"
