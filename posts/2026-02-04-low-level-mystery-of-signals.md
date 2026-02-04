@@ -1,12 +1,13 @@
 ---
-title: "The Low Level Mystery of Signals"
+title: The Low Level Mystery of Signals
 slug: low-level-mystery-of-signals
 date: 2026-02-04
-summary: Uncover the low-level abstraction behind shortcuts like CTRL+Z and CTRL+C - the mysterious world of Linux signals.
+summary: Uncover the low-level abstraction behind shortcuts like CTRL+Z and
+  CTRL+C - the mysterious world of Linux signals.
 tags:
   - Linux
   - Terminal
-  - Signals
+  - Systems
 keywords:
   - linux signals
   - SIGTERM
